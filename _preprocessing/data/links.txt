@@ -1,0 +1,2 @@
+https://www.kaggle.com/datasets/goldenoakresearch/us-household-income-stats-geo-locations
+https://www.kaggle.com/datasets/joebeachcapital/homicides

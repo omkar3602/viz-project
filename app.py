@@ -18,4 +18,4 @@ def index():
         cities_data_dict[state] = cities_data
 
 
-    return render_template('index.html', states_data=states_data, cities_data_dict=cities_data_dict)
+    return render_template('index.html', states_data=states_data, cities_data_dict=cities_data_dict, df=df.to_dict(orient='records'))

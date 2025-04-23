@@ -61,6 +61,7 @@
     <script>
         var states_data = {{ states_data | safe }};
         var cities_data_dict = {{ cities_data_dict | safe }};
+        var df = {{ df | safe }};
     </script>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="incidents-bar-container">
-                    <div class="vis-header">Incidents by Location</div>
+                    <div class="vis-header" id="incidents-bar-container-header">Incidents by State</div>
                     <div class="vis-content">
                         <svg id="incidents-bar-svg"></svg>
                     </div>
@@ -60,6 +60,7 @@
     </div>
     <script>
         var states_data = {{ states_data | safe }};
+        var cities_data_dict = {{ cities_data_dict | safe }};
     </script>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

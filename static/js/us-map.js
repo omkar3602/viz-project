@@ -8,7 +8,8 @@ const projection = d3.geoAlbersUsa()
 
 const path = d3.geoPath().projection(projection);
 
-
+// Track the currently selected state
+let selectedStateAbbr = null;
 
 // Create tooltip div
 const tooltip = d3.select("body").append("div")
@@ -58,9 +59,11 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
         .style("top", (event.pageY - 28) + "px");
         
       // Highlight the state
-      d3.select(this)
-        .attr("stroke", "#000")
-        .attr("stroke-width", 2);
+      if (stateAbbr !== selectedStateAbbr) {
+        d3.select(this)
+          .attr("stroke", "#000")
+          .attr("stroke-width", 2);
+      }
     })
     .on("mousemove", function(event) {
       // Move tooltip with the mouse
@@ -68,35 +71,65 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
     })
-    .on("mouseout", function() {
+    .on("mouseout", function(event, d) {
       // Hide tooltip on mouseout
       tooltip.transition()
         .duration(500)
         .style("opacity", 0);
         
-      // Restore original stroke
-      d3.select(this)
-        .attr("stroke", "#333")
-        .attr("stroke-width", 0.5);
+      // Restore original stroke if not the selected state
+      const stateAbbr = idToState[d.id];
+      if (stateAbbr !== selectedStateAbbr) {
+        d3.select(this)
+          .attr("stroke", "#333")
+          .attr("stroke-width", 0.5);
+      }
     })
     .on("click", function(event, d) {
-      // Dispatch event for selected state
+      // Get state info
       const stateAbbr = idToState[d.id];
       const stateName = stateNames[stateAbbr];
       
+      // If clicking the same state again, deselect it
+      if (stateAbbr === selectedStateAbbr) {
+        selectedStateAbbr = null;
+        
+        // Reset all states to original style
+        us_map_svg.selectAll("path.state")
+          .attr("stroke", "#333")
+          .attr("stroke-width", 0.5);
+          
+        // Dispatch event to show all states in the bar chart again
+        const stateEvent = new CustomEvent('stateSelected', {
+          detail: { state: null, abbr: null, reset: true }
+        });
+        document.dispatchEvent(stateEvent);
+        
+        return;
+      }
+      
+      // Update selected state
+      selectedStateAbbr = stateAbbr;
+      
+      // Dispatch event for selected state including cities data
       const stateEvent = new CustomEvent('stateSelected', {
-        detail: { state: stateName, abbr: stateAbbr }
+        detail: { 
+          state: stateName, 
+          abbr: stateAbbr,
+          citiesData: cities_data_dict[stateAbbr] || {}
+        }
       });
       document.dispatchEvent(stateEvent);
       
-      // Highlight the selected state
+      // Reset all states to original style first
       us_map_svg.selectAll("path.state")
-        .attr("stroke", function(d2) {
-          return idToState[d2.id] === stateAbbr ? "#000" : "#333";
-        })
-        .attr("stroke-width", function(d2) {
-          return idToState[d2.id] === stateAbbr ? 2 : 0.5;
-        });
+        .attr("stroke", "#333")
+        .attr("stroke-width", 0.5);
+        
+      // Highlight only the selected state
+      d3.select(this)
+        .attr("stroke", "#000")
+        .attr("stroke-width", 2.5);
     });
 });
 

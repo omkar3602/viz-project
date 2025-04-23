@@ -10,4 +10,12 @@ df = pd.read_csv(FILE_PATH)
 @app.route('/')
 def index():
     states_data = df['state'].value_counts().to_dict()
-    return render_template('index.html', states_data=states_data)
+
+    cities_data_dict = {}
+    # state : cities_data
+    for state in states_data.keys():
+        cities_data = df[df['state'] == state]['city'].value_counts().to_dict()
+        cities_data_dict[state] = cities_data
+
+
+    return render_template('index.html', states_data=states_data, cities_data_dict=cities_data_dict)

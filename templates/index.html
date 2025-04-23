@@ -61,6 +61,9 @@
     <script>
         var states_data = {{ states_data | safe }};
     </script>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
     <!-- US map -->
     <script src="{{ url_for('static', filename='js/us-map.js') }}"></script>
     

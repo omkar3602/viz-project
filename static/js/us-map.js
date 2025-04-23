@@ -2,34 +2,28 @@ const us_map_svg = d3.select("#us-map-svg");
 const width = 800;
 const height = 400;
 
-
 const projection = d3.geoAlbersUsa()
                         .scale(700)
                         .translate([width / 2, height / 2 - 20]);
 
 const path = d3.geoPath().projection(projection);
 
-// Color scale
-const color = d3.scaleSequential()
-  .domain([0, d3.max(Object.values(states_data))])
-  .interpolator(d3.interpolateReds);
 
-// Function to convert state numeric id to abbreviation
-// You can extend this mapping as needed
-const idToState = {
-    "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA",
-    "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL",
-    "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN",
-    "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME",
-    "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS",
-    "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH",
-    "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND",
-    "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI",
-    "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT",
-    "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI",
-    "56": "WY"
-  };
-  
+
+// Create tooltip div
+const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("background-color", "white")
+    .style("border", "1px solid #ddd")
+    .style("border-radius", "4px")
+    .style("padding", "8px")
+    .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
+    .style("font-size", "12px")
+    .style("pointer-events", "none")
+    .style("opacity", 0)
+    .style("z-index", 1000);
+
 d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
   const states = topojson.feature(us, us.objects.states).features;
 
@@ -45,8 +39,65 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
       return value ? color(value) : "#FFEAE2";
     })
     .attr("stroke", "#333")
-    .attr("stroke-width", 0.5);
-
+    .attr("stroke-width", 0.5)
+    .on("mouseover", function(event, d) {
+      // Show tooltip on mouseover
+      const stateAbbr = idToState[d.id];
+      const stateName = stateNames[stateAbbr] || stateAbbr;
+      const incidents = states_data[stateAbbr] || 0;
+      
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0.9);
+        
+      tooltip.html(`
+        <strong>${stateName}</strong><br/>
+        Incidents: ${incidents}
+      `)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+        
+      // Highlight the state
+      d3.select(this)
+        .attr("stroke", "#000")
+        .attr("stroke-width", 2);
+    })
+    .on("mousemove", function(event) {
+      // Move tooltip with the mouse
+      tooltip
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+    })
+    .on("mouseout", function() {
+      // Hide tooltip on mouseout
+      tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
+        
+      // Restore original stroke
+      d3.select(this)
+        .attr("stroke", "#333")
+        .attr("stroke-width", 0.5);
+    })
+    .on("click", function(event, d) {
+      // Dispatch event for selected state
+      const stateAbbr = idToState[d.id];
+      const stateName = stateNames[stateAbbr];
+      
+      const stateEvent = new CustomEvent('stateSelected', {
+        detail: { state: stateName, abbr: stateAbbr }
+      });
+      document.dispatchEvent(stateEvent);
+      
+      // Highlight the selected state
+      us_map_svg.selectAll("path.state")
+        .attr("stroke", function(d2) {
+          return idToState[d2.id] === stateAbbr ? "#000" : "#333";
+        })
+        .attr("stroke-width", function(d2) {
+          return idToState[d2.id] === stateAbbr ? 2 : 0.5;
+        });
+    });
 });
 
 // Legend configuration
@@ -95,3 +146,11 @@ const legendAxis = d3.axisRight(legendScale)
 legendSvg.append("g")
   .attr("transform", `translate(${legendWidth}, 0)`)
   .call(legendAxis);
+
+// Add legend title
+legendSvg.append("text")
+  .attr("x", legendWidth / 2)
+  .attr("y", -8)
+  .attr("text-anchor", "middle")
+  .style("font-size", "10px")
+  .text("Incidents");

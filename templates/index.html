@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="income-kde-container">
-                    <div class="vis-header">Mean Income Distribution</div>
+                    <div class="vis-header" id="income-kde-container-header">Mean Income Distribution: United States</div>
                     <div class="vis-content">
                         <svg id="income-kde-svg"></svg>
                     </div>
@@ -62,6 +62,8 @@
         var states_data = {{ states_data | safe }};
         var cities_data_dict = {{ cities_data_dict | safe }};
         var df = {{ df | safe }};
+        var us_income_data = {{ us_income_data | safe }};
+        var state_income_data = {{ state_income_data | safe }};
     </script>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

@@ -7,14 +7,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <!-- Add D3.js library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+
 </head>
 <body>
     <div class="page-container">
-        <h1 class="dashboard-title">Crime Data Dashboard</h1>
+        <h1 class="dashboard-title">Homicide Data Dashboard</h1>
         <div class="dashboard-container">
             <div class="top-row">
                 <div class="us-map-container">
-                    <div class="vis-header">US Map Plot</div>
+                    <div class="vis-header">US Map</div>
                     <div class="vis-content">
                         <svg id="us-map-svg"></svg>
                     </div>
@@ -41,7 +43,7 @@
                 </div>
                 <div class="right-column">
                     <div class="top-crimes-container">
-                        <div class="vis-header">Top Cities by Crime Rate</div>
+                        <div class="vis-header">Top Cities by Homicide Rate</div>
                         <div class="vis-content">
                             <svg id="top-crimes-svg"></svg>
                         </div>
@@ -56,7 +58,10 @@
             </div>
         </div>
     </div>
-
+    <script>
+        var map_data = {{ map_data | safe }};
+        console.log(map_data);
+    </script>
     <!-- US map -->
     <script src="{{ url_for('static', filename='js/us-map.js') }}"></script>
     

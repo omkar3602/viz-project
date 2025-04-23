@@ -3,14 +3,14 @@ const width = +us_map_svg.attr("width");
 const height = +us_map_svg.attr("height");
 
 const projection = d3.geoAlbersUsa()
-                        .scale(800)
-                        .translate([width / 2 +450, height / 2 + 200]);
+                        .scale(700)
+                        .translate([width / 2 +400, height / 2 + 170]);
 
 const path = d3.geoPath().projection(projection);
 
 // Color scale
 const color = d3.scaleSequential()
-  .domain([0, d3.max(Object.values(map_data))])
+  .domain([0, d3.max(Object.values(states_data))])
   .interpolator(d3.interpolateReds);
 
 // Function to convert state numeric id to abbreviation
@@ -40,7 +40,7 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
     .attr("d", path)
     .attr("fill", d => {
       const stateAbbr = idToState[d.id];
-      const value = map_data[stateAbbr];
+      const value = states_data[stateAbbr];
       return value ? color(value) : "#FFEAE2";
     })
     .attr("stroke", "#333")
@@ -51,7 +51,7 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
 // Legend configuration
 const legendWidth = 20;
 const legendHeight = 200;
-const legendMargin = { top: 20, left: width + 800 };
+const legendMargin = { top: 20, left: width + 700 };
 
 const legendSvg = us_map_svg.append("g")
   .attr("transform", `translate(${legendMargin.left}, ${legendMargin.top})`);
@@ -72,7 +72,7 @@ linearGradient.selectAll("stop")
   .enter()
   .append("stop")
   .attr("offset", d => `${d * 100}%`)
-  .attr("stop-color", d => color(d * d3.max(Object.values(map_data))));
+  .attr("stop-color", d => color(d * d3.max(Object.values(states_data))));
 
 // Draw the gradient rect
 legendSvg.append("rect")
@@ -84,7 +84,7 @@ legendSvg.append("rect")
 
 // Add labels using a scale and axis
 const legendScale = d3.scaleLinear()
-  .domain([0, d3.max(Object.values(map_data))])
+  .domain([0, d3.max(Object.values(states_data))])
   .range([legendHeight, 0]);
 
 const legendAxis = d3.axisRight(legendScale)

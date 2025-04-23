@@ -1,1 +1,78 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Data Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <!-- Add D3.js library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="page-container">
+        <h1 class="dashboard-title">Crime Data Dashboard</h1>
+        <div class="dashboard-container">
+            <div class="top-row">
+                <div class="us-map-container">
+                    <div class="vis-header">US Map Plot</div>
+                    <div class="vis-content">
+                        <svg id="us-map-svg"></svg>
+                    </div>
+                </div>
+                <div class="incidents-bar-container">
+                    <div class="vis-header">Incidents by Location</div>
+                    <div class="vis-content">
+                        <svg id="incidents-bar-svg"></svg>
+                    </div>
+                </div>
+                <div class="income-kde-container">
+                    <div class="vis-header">Mean Income Distribution</div>
+                    <div class="vis-content">
+                        <svg id="income-kde-svg"></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-row">
+                <div class="parallel-coordinates-container">
+                    <div class="vis-header">Parallel Coordinates</div>
+                    <div class="vis-content">
+                        <svg id="parallel-coordinates-svg"></svg>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="top-crimes-container">
+                        <div class="vis-header">Top Cities by Crime Rate</div>
+                        <div class="vis-content">
+                            <svg id="top-crimes-svg"></svg>
+                        </div>
+                    </div>
+                    <div class="safety-index-container">
+                        <div class="vis-header">Safety Index of the State</div>
+                        <div class="vis-content">
+                            <svg id="safety-index-svg"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- US map -->
+    <script src="{{ url_for('static', filename='js/us-map.js') }}"></script>
+    
+    <!-- bar chart -->
+    <script src="{{ url_for('static', filename='js/incidents-bar.js') }}"></script>
+    
+    <!-- income KDE visualization -->
+    <script src="{{ url_for('static', filename='js/income-kde.js') }}"></script>
+    
+    <!-- parallel coordinates plot -->
+    <script src="{{ url_for('static', filename='js/parallel-coordinates.js') }}"></script>
+    
+    <!-- top crimes visualization -->
+    <script src="{{ url_for('static', filename='js/top-crimes.js') }}"></script>
+    
+    <!-- safety index  -->
+    <script src="{{ url_for('static', filename='js/safety-index.js') }}"></script>
+</body>
+</html>

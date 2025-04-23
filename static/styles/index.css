@@ -1,0 +1,126 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f0f0f0; /* Grey background */
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+}
+
+.dashboard-title {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 36px;
+    padding: 15px 0;
+    height: 60px;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    height: calc(100% - 70px); /* Adjusted for increased title height */
+    flex: 1;
+}
+
+.top-row, .bottom-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.top-row {
+    height: 50%;
+}
+
+.bottom-row {
+    height: 50%;
+}
+
+/* Common styles for all visualization containers */
+.us-map-container,
+.incidents-bar-container,
+.income-kde-container,
+.parallel-coordinates-container,
+.top-crimes-container,
+.safety-index-container {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.us-map-container {
+    flex: 3;
+}
+
+.incidents-bar-container, .income-kde-container {
+    flex: 2;
+}
+
+.parallel-coordinates-container {
+    flex: 3;
+}
+
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.top-crimes-container, .safety-index-container {
+    flex: 1;
+}
+
+/* Header for each visualization */
+.vis-header {
+    background-color: #f8f8f8;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eaeaea;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+/* Container for the actual visualization (svg) */
+.vis-content {
+    flex: 1;
+    position: relative;
+}
+
+.chart-content {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Make sure SVGs fill their containers */
+svg {
+    width: 100%;
+    height: 100%;
+}

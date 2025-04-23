@@ -37,7 +37,7 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
     .attr("fill", d => {
       const stateAbbr = idToState[d.id];
       const value = states_data[stateAbbr];
-      return value ? color(value) : "#FFEAE2";
+      return value ? color(value) : "#FFEFE9";
     })
     .attr("stroke", "#333")
     .attr("stroke-width", 0.5)

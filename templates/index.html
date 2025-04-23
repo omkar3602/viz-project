@@ -59,8 +59,7 @@
         </div>
     </div>
     <script>
-        var map_data = {{ map_data | safe }};
-        console.log(map_data);
+        var states_data = {{ states_data | safe }};
     </script>
     <!-- US map -->
     <script src="{{ url_for('static', filename='js/us-map.js') }}"></script>

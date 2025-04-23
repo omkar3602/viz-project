@@ -1,10 +1,11 @@
 const us_map_svg = d3.select("#us-map-svg");
-const width = +us_map_svg.attr("width");
-const height = +us_map_svg.attr("height");
+const width = 800;
+const height = 400;
+
 
 const projection = d3.geoAlbersUsa()
                         .scale(700)
-                        .translate([width / 2 +400, height / 2 + 170]);
+                        .translate([width / 2, height / 2 - 20]);
 
 const path = d3.geoPath().projection(projection);
 
@@ -51,7 +52,7 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
 // Legend configuration
 const legendWidth = 20;
 const legendHeight = 200;
-const legendMargin = { top: 20, left: width + 700 };
+const legendMargin = { top: 20, left: width - legendWidth - 40 };
 
 const legendSvg = us_map_svg.append("g")
   .attr("transform", `translate(${legendMargin.left}, ${legendMargin.top})`);

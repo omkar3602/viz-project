@@ -9,5 +9,5 @@ df = pd.read_csv(FILE_PATH)
 
 @app.route('/')
 def index():
-    map_data = df['state'].value_counts().to_dict()
-    return render_template('index.html', map_data=map_data)
+    states_data = df['state'].value_counts().to_dict()
+    return render_template('index.html', states_data=states_data)

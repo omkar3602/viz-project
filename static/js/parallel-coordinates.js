@@ -178,15 +178,24 @@ if (typeof df !== 'undefined' && df && df.length > 0) {
                     .extent([[-8, 0], [8, pc_innerHeight]])
                     .on("brush end", function(event) {
                         const actives = dimensions.filter(dim => d3.brushSelection(d3.select(`#brush-${dim.name}`).node()));
-                        lines.style("display", p => {
+                        
+                        const visibleLines = processedData.filter(p => {
                             return actives.every(active => {
                                 const sel = d3.brushSelection(d3.select(`#brush-${active.name}`).node());
                                 const val = p[active.name];
                                 if (val === null || val === undefined || val === "") return false;
                                 const scaled = active.type === "numeric" ? active.scale(+val) : active.scale(val);
                                 return scaled >= sel[0] && scaled <= sel[1];
-                            }) ? null : "none";
+                            });
                         });
+                    
+                        // Update lines on screen
+                        lines.style("display", d => visibleLines.includes(d) ? null : "none");
+                    
+                        // ✅ Update df
+                        window.df = visibleLines;
+                        window.dispatchEvent(new Event("dfUpdated"));
+
                     })
             );
         })

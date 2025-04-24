@@ -238,3 +238,24 @@ document.addEventListener('stateSelected', function(event) {
     showCityData(event.detail.abbr, event.detail.state);
   }
 });
+
+// Listen for brushing updates
+window.addEventListener("dfUpdated", () => {
+  if (window.df && Array.isArray(window.df)) {
+    // Count incidents by state
+    const updatedStatesData = d3.rollup(
+      window.df,
+      v => v.length,
+      d => d.state
+    );
+
+    // Reformat for bar chart input
+    const barChartData = Array.from(updatedStatesData, ([key, value]) => ({ key, value }))
+      .sort((a, b) => b.value - a.value);
+
+    // Set new title and reset view
+    chartTitle = "Incidents by State (Filtered)";
+    selectedStateAbbr = null;
+    updateChart(barChartData, false);
+  }
+});

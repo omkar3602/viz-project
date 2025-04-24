@@ -187,3 +187,48 @@ legendSvg.append("text")
   .attr("text-anchor", "middle")
   .style("font-size", "10px")
   .text("Incidents");
+
+  // Add a method to recompute and re-render the map using df or filtered_df
+function updateMapFromData(newData) {
+  // Count incidents per state
+  const updatedStatesData = d3.rollup(
+    newData,
+    v => v.length,
+    d => d.state
+  );
+
+  // Replace states_data with new one
+  window.states_data = Object.fromEntries(updatedStatesData);
+
+  // Update color scale domain
+  color.domain([0, d3.max(Object.values(states_data))]);
+
+  // Update map colors
+  us_map_svg.selectAll("path.state")
+    .transition().duration(500)
+    .attr("fill", d => {
+      const stateAbbr = idToState[d.id];
+      const value = states_data[stateAbbr];
+      return value ? color(value) : "#FFEFE9";
+    });
+
+  // Update legend color stops
+  d3.select("#legend-gradient")
+    .selectAll("stop")
+    .data(d3.ticks(0, 1, 10))
+    .join("stop")
+    .attr("offset", d => `${d * 100}%`)
+    .attr("stop-color", d => color(d * d3.max(Object.values(states_data))));
+
+  // Update legend axis
+  legendScale.domain([0, d3.max(Object.values(states_data))]);
+  legendSvg.select("g")
+    .call(d3.axisRight(legendScale).ticks(5).tickFormat(d3.format(".0f")));
+}
+
+// Listen for brush filter changes
+window.addEventListener("dfUpdated", () => {
+  if (window.df && Array.isArray(window.df)) {
+    updateMapFromData(window.df);
+  }
+});

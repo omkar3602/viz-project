@@ -3,3 +3,4 @@ LATER:
     Remove top cities section and another plot
 2) Add clustering to the Parallel coordinates plot
     Based on state? or based on kmeans?
+3) Based on brushing, should income kde plot change?

@@ -4,7 +4,7 @@ import numpy as np
 
 app = Flask(__name__)
 
-FILE_PATH = 'static/data/homicide-data.csv'
+FILE_PATH = 'static/data/homicide_data_cleaned.csv'
 INCOME_FILE_PATH = 'static/data/income_data_cleaned.csv'
 df = pd.read_csv(FILE_PATH, encoding='latin-1')
 income_df = pd.read_csv(INCOME_FILE_PATH)
